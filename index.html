@@ -4,339 +4,105 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Glicks - Premium Media Downloader</title>
-    <!-- Stable CSS styling with Tailwind and premium font stack -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: [
-                            'Geist Sans',
-                            '-apple-system',
-                            'BlinkMacSystemFont',
-                            '"Segoe UI"',
-                            'Roboto',
-                            'Helvetica',
-                            'Arial',
-                            'sans-serif'
-                        ],
-                    }
-                }
-            }
-        }
-    </script>
-    <!-- React and Babel -->
     <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <style>
-        body { 
-            background-color: #060814; 
-            color: #F3F4F6;
-            letter-spacing: -0.02em;
-        }
+        body { background-color: #060814; color: #F3F4F6; }
     </style>
 </head>
 <body class="font-sans antialiased">
     <div id="root"></div>
 
     <script type="text/babel">
-        // Clean inline SVG Icons
-        const SparklesIcon = () => (
-            <svg className="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
-            </svg>
-        );
-
-        const DownloadIcon = () => (
-            <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-            </svg>
-        );
-
-        const LinkIcon = () => (
-            <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
-            </svg>
-        );
-
-        const SAMPLE_LINKS = [
-          { label: "YouTube Video", url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ" },
-          { label: "Instagram Reel", url: "https://www.instagram.com/p/CgX942kJXy3/" },
-          { label: "Spotify Track", url: "https://open.spotify.com/track/4PTG3Z6ehGkBF36qJkua6C" }
-        ];
-
         function App() {
           const [activePage, setActivePage] = React.useState('home');
           const [urlInput, setUrlInput] = React.useState('');
-          const [isProcessing, setIsProcessing] = React.useState(false);
-          const [processStep, setProcessStep] = React.useState('');
-          const [mediaDetails, setMediaDetails] = React.useState(null);
-          const [selectedFormat, setSelectedFormat] = React.useState('mp4-1080p');
           const [isDownloading, setIsDownloading] = React.useState(false);
-          const [downloadProgress, setDownloadProgress] = React.useState(0);
-          const [isCompleted, setIsCompleted] = React.useState(false);
-          const [toasts, setToasts] = React.useState([]);
-          const [openFaq, setOpenFaq] = React.useState(null);
-
-          const showToast = (message) => {
-            const id = Date.now();
-            setToasts((prev) => [...prev, { id, message }]);
-            setTimeout(() => {
-              setToasts((prev) => prev.filter((t) => t.id !== id));
-            }, 3000);
-          };
-
-          const handleAnalyze = (e) => {
-            if (e) e.preventDefault();
-            if (!urlInput.trim()) {
-              showToast("Please enter a valid link.");
-              return;
-            }
-            setIsProcessing(true);
-            setMediaDetails(null);
-            setIsCompleted(false);
-
-            const steps = [
-              "Connecting to stream servers...",
-              "Bypassing geo-blocks...",
-              "Extracting media file format..."
-            ];
-
-            let step = 0;
-            const interval = setInterval(() => {
-              if (step < steps.length) {
-                setProcessStep(steps[step]);
-                step++;
-              } else {
-                clearInterval(interval);
-                setMediaDetails({
-                  title: "Extracted Premium Media File",
-                  formats: [
-                    { id: 'mp4-1080p', label: 'MP4 Video (1080p Full HD)', size: '45.2 MB' },
-                    { id: 'mp3-320', label: 'MP3 Audio (320kbps High)', size: '8.4 MB' }
-                  ]
-                });
-                setIsProcessing(false);
-                showToast("Success! Formats loaded.");
-              }
-            }, 800);
-          };
-
-          const startDownload = () => {
+          
+          // Download simulation logic
+          const triggerDownload = () => {
             setIsDownloading(true);
-            setDownloadProgress(0);
-
-            const interval = setInterval(() => {
-              setDownloadProgress(prev => {
-                if (prev >= 100) {
-                  clearInterval(interval);
-                  setIsDownloading(false);
-                  setIsCompleted(true);
-                  showToast("Download Completed!");
-                  return 100;
-                }
-                return prev + 20;
-              });
-            }, 400);
-          };
-
-          const toggleFaq = (index) => {
-            setOpenFaq(openFaq === index ? null : index);
+            setTimeout(() => {
+                // Real Browser Download Simulation
+                const data = "Sample Media Data";
+                const blob = new Blob([data], { type: 'video/mp4' });
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'Glicks_Download.mp4';
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                setIsDownloading(false);
+                alert("File download started! Check your browser's Downloads folder.");
+            }, 2000);
           };
 
           return (
-            <div className="min-h-screen bg-[#060814] text-gray-100 flex flex-col justify-between selection:bg-blue-500/30">
-              {/* Toast */}
-              <div className="fixed bottom-5 right-5 z-50 flex flex-col gap-2 max-w-sm w-full px-4">
-                {toasts.map(t => (
-                  <div key={t.id} className="p-4 rounded-2xl bg-gray-950 border border-blue-500/20 text-white flex gap-2 items-center shadow-xl backdrop-blur-md">
-                    <span className="text-blue-400">✓</span>
-                    <span className="text-sm font-medium">{t.message}</span>
-                  </div>
-                ))}
-              </div>
-
+            <div className="min-h-screen bg-[#060814]">
               {/* Header */}
               <header className="border-b border-white/[0.04] bg-[#060814]/80 backdrop-blur-md sticky top-0 z-40">
                 <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-                  <div onClick={() => setActivePage('home')} className="flex items-center gap-2.5 cursor-pointer">
-                    <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center shadow-lg shadow-blue-500/20">
-                      <SparklesIcon />
-                    </div>
-                    <span className="text-xl font-extrabold tracking-tight bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">Glicks</span>
-                  </div>
+                  <div className="text-xl font-extrabold text-white">Glicks</div>
                   <nav className="flex gap-6 text-sm font-medium">
-                    <button onClick={() => setActivePage('home')} className={`transition-colors ${activePage === 'home' ? 'text-blue-400' : 'text-gray-400 hover:text-white'}`}>Home</button>
-                    <button onClick={() => setActivePage('features')} className={`transition-colors ${activePage === 'features' ? 'text-blue-400' : 'text-gray-400 hover:text-white'}`}>Features</button>
+                    <button onClick={() => setActivePage('home')} className={activePage === 'home' ? 'text-blue-400' : 'text-gray-400'}>Home</button>
+                    <button onClick={() => setActivePage('features')} className={activePage === 'features' ? 'text-blue-400' : 'text-gray-400'}>Features</button>
                   </nav>
                 </div>
               </header>
 
-              {/* Content */}
-              <main className="max-w-7xl mx-auto px-4 py-12 flex-1 w-full flex flex-col justify-center">
-                {activePage === 'home' && (
-                  <div className="space-y-16">
-                    {/* Hero Input Area */}
-                    <div className="space-y-12">
-                      <div className="text-center space-y-4 max-w-2xl mx-auto">
-                        <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight leading-none text-white">
-                          Download <span className="bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent">Videos & Music</span>
-                        </h1>
-                        <p className="text-gray-400 text-sm md:text-base max-w-md mx-auto font-medium">
-                          Paste links from YouTube, Instagram, or Spotify below.
-                        </p>
-                      </div>
-
-                      <div className="max-w-2xl mx-auto w-full px-2">
-                        <form onSubmit={handleAnalyze} className="p-2 bg-[#0F1224]/80 border border-white/[0.06] rounded-2xl flex flex-col sm:flex-row gap-2 shadow-2xl backdrop-blur-sm">
-                          <div className="flex items-center gap-3 px-3 py-2 flex-1">
-                            <LinkIcon />
-                            <input 
-                              type="url" 
-                              value={urlInput}
-                              onChange={(e) => setUrlInput(e.target.value)}
-                              placeholder="Paste link here..." 
-                              className="bg-transparent border-0 text-white w-full focus:outline-none text-sm md:text-base placeholder-gray-500 font-medium"
-                            />
-                          </div>
-                          <button type="submit" className="bg-blue-600 hover:bg-blue-500 text-white px-8 py-3.5 rounded-xl font-semibold text-sm transition-all flex items-center justify-center shadow-lg shadow-blue-500/20 active:scale-[0.98]">
-                            <DownloadIcon /> Analyse Link
-                          </button>
-                        </form>
-                        
-                        <div className="flex flex-wrap gap-2 justify-center mt-5">
-                          {SAMPLE_LINKS.map((s, i) => (
-                            <button 
-                              key={i} 
-                              type="button" 
-                              onClick={() => setUrlInput(s.url)} 
-                              className="text-gray-400 hover:text-white text-xs font-semibold px-3.5 py-2 bg-white/5 hover:bg-white/10 rounded-xl border border-white/5 transition-all"
-                            >
-                              {s.label}
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-
-                      {isProcessing && (
-                        <div className="max-w-md mx-auto p-6 bg-[#0F1224]/80 rounded-2xl border border-blue-500/20 text-center space-y-4 shadow-lg animate-pulse">
-                          <div className="inline-block animate-spin text-blue-400 text-xl">🔄</div>
-                          <p className="text-sm text-blue-400 font-semibold">{processStep}</p>
-                        </div>
-                      )}
-
-                      {mediaDetails && !isProcessing && (
-                        <div className="max-w-xl mx-auto p-6 bg-[#0F1224]/80 rounded-2xl border border-white/[0.06] space-y-4 shadow-2xl">
-                          <h3 className="font-bold text-lg text-white border-b border-white/[0.06] pb-3">{mediaDetails.title}</h3>
-                          <div className="space-y-2.5">
-                            {mediaDetails.formats.map(f => (
-                              <button 
-                                key={f.id} 
-                                type="button"
-                                onClick={() => setSelectedFormat(f.id)}
-                                className={`w-full p-4 rounded-xl border text-left flex justify-between items-center transition-all ${selectedFormat === f.id ? 'border-blue-500 bg-blue-500/10 text-blue-400 font-semibold' : 'border-white/5 bg-gray-950/40 hover:bg-gray-900/50 text-gray-300 font-medium'}`}
-                              >
-                                <span className="text-sm">{f.label}</span>
-                                <span className="font-bold text-xs bg-white/5 px-2 py-1 rounded-lg">{f.size}</span>
-                              </button>
-                            ))}
-                          </div>
-                          {!isDownloading && !isCompleted && (
-                            <button onClick={startDownload} type="button" className="w-full py-4 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-semibold text-sm transition-all shadow-lg shadow-blue-500/20 active:scale-[0.98]">
-                              Get Download Link
-                            </button>
-                          )}
-                          {isDownloading && (
-                            <div className="space-y-2 pt-2">
-                              <div className="h-1.5 w-full bg-gray-950 rounded-full overflow-hidden">
-                                <div className="h-full bg-blue-500 transition-all duration-300" style={{ width: `${downloadProgress}%` }}></div>
-                              </div>
-                              <p className="text-center text-xs text-gray-400 font-semibold">Downloading... {downloadProgress}%</p>
-                            </div>
-                          )}
-                          {isCompleted && (
-                            <div className="text-center text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 rounded-xl font-semibold text-sm py-4">
-                              ✓ File Downloaded Successfully!
-                            </div>
-                          )}
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Section 1: Live Server Status (Content Booster) */}
-                    <div className="max-w-4xl mx-auto space-y-6 pt-8">
-                      <div className="flex items-center justify-between border-b border-white/[0.04] pb-4">
-                        <h3 className="text-lg font-bold text-white flex items-center gap-2">
-                          <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></span> Live Extraction Nodes
-                        </h3>
-                        <span className="text-xs text-gray-500 font-semibold">Updated 1s ago</span>
-                      </div>
-                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                        <div className="p-4 bg-white/[0.02] border border-white/[0.04] rounded-xl flex items-center justify-between">
-                          <span className="text-sm font-semibold text-gray-300">YouTube Core API</span>
-                          <span className="text-xs font-bold text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-lg">99.9% Online</span>
-                        </div>
-                        <div className="p-4 bg-white/[0.02] border border-white/[0.04] rounded-xl flex items-center justify-between">
-                          <span className="text-sm font-semibold text-gray-300">Instagram CDN Edge</span>
-                          <span className="text-xs font-bold text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-lg">100% Online</span>
-                        </div>
-                        <div className="p-4 bg-white/[0.02] border border-white/[0.04] rounded-xl flex items-center justify-between">
-                          <span className="text-sm font-semibold text-gray-300">Spotify Metadata Node</span>
-                          <span className="text-xs font-bold text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-lg">99.4% Online</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Section 2: How to Use */}
-                    <div className="max-w-4xl mx-auto space-y-8 pt-6">
-                      <h3 className="text-xl font-bold text-white text-center">Get Started in 3 Simple Steps</h3>
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <div className="p-6 bg-white/[0.01] border border-white/[0.04] rounded-2xl relative space-y-3">
-                          <span className="text-4xl font-extrabold text-blue-500/20 absolute right-6 top-4">01</span>
-                          <h4 className="font-bold text-white text-base">Copy Media URL</h4>
-                          <p className="text-sm text-gray-400 leading-relaxed">Apne manpasand platform se video, audio ya reel ka link copy karein.</p>
-                        </div>
-                        <div className="p-6 bg-white/[0.01] border border-white/[0.04] rounded-2xl relative space-y-3">
-                          <span className="text-4xl font-extrabold text-indigo-500/20 absolute right-6 top-4">02</span>
-                          <h4 className="font-bold text-white text-base">Analyze Link</h4>
-                          <p className="text-sm text-gray-400 leading-relaxed">Link ko input box mein paste karke "Analyse Link" button par click karein.</p>
-                        </div>
-                        <div className="p-6 bg-white/[0.01] border border-white/[0.04] rounded-2xl relative space-y-3">
-                          <span className="text-4xl font-extrabold text-purple-500/20 absolute right-6 top-4">03</span>
-                          <h4 className="font-bold text-white text-base">One-Click Download</h4>
-                          <p className="text-sm text-gray-400 leading-relaxed">Format select karein aur high speed servers ke sath file save karein.</p>
-                        </div>
+              <main className="max-w-7xl mx-auto px-4 py-12">
+                {activePage === 'home' ? (
+                  <div className="space-y-12">
+                    <div className="text-center space-y-4">
+                      <h1 className="text-4xl md:text-5xl font-extrabold text-white">Premium Media Extractor</h1>
+                      <div className="max-w-md mx-auto bg-[#0F1224] p-4 rounded-2xl border border-white/10">
+                        <input value={urlInput} onChange={(e) => setUrlInput(e.target.value)} placeholder="Paste link here..." className="w-full bg-transparent text-white outline-none mb-3" />
+                        <button onClick={triggerDownload} className="w-full bg-blue-600 py-3 rounded-xl font-bold">
+                          {isDownloading ? 'Processing...' : 'Start Download'}
+                        </button>
                       </div>
                     </div>
                   </div>
-                )}
-
-                {activePage === 'features' && (
-                  <div className="max-w-4xl mx-auto space-y-16 py-6">
-                    <div className="text-center space-y-4">
-                      <h2 className="text-3xl md:text-5xl font-extrabold tracking-tight text-white">
-                        Why Choose <span className="bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent">Glicks</span>?
-                      </h2>
-                      <p className="text-gray-400 max-w-md mx-auto text-sm leading-relaxed font-medium">
-                        Bina kisi jhanjhat ke aapke favourite videos aur audio ko extract karne ke premium aur super-fast features.
-                      </p>
+                ) : (
+                  <div className="max-w-5xl mx-auto space-y-12">
+                    <h2 className="text-4xl font-extrabold text-white text-center">Why Premium?</h2>
+                    
+                    {/* Stats Grid */}
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+                        {[{label: "Happy Users", val: "50K+"}, {label: "Daily Downloads", val: "10K+"}, {label: "Speed", val: "1Gbps"}, {label: "Uptime", val: "99.9%"}]
+                        .map((stat, i) => (
+                            <div key={i} className="p-4 bg-white/5 rounded-xl border border-white/10">
+                                <div className="text-2xl font-bold text-blue-400">{stat.val}</div>
+                                <div className="text-xs text-gray-500">{stat.label}</div>
+                            </div>
+                        ))}
                     </div>
 
-                    {/* Features Grid */}
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                      {/* Feature 1 */}
-                      <div className="p-6 bg-[#0F1224]/80 border border-white/[0.06] rounded-2xl space-y-4 shadow-xl backdrop-blur-sm hover:border-blue-500/30 transition-all">
-                        <div className="w-12 h-12 rounded-xl bg-blue-600/10 flex items-center justify-center text-xl text-blue-400 border border-blue-500/20">🚀</div>
-                        <h3 className="font-bold text-lg text-white">Super Fast Extraction</h3>
-                        <p className="text-gray-400 text-sm leading-relaxed">
-                          Multi-threaded servers use karke aapki media files ko palak jhapakte hi convert aur fetch kiya jata hai.
-                        </p>
-                      </div>
-
-                      {/* Feature 2 */}
-                      <div className="p-6 bg-[#0F1224]/80 border border-white/[0.06] rounded-2xl space-y-4 shadow-xl backdrop-blur-sm hover:border-indigo-500/30 transition-all">
-                        <div className="w-12 h-12 rounded-xl bg-indigo-600/10 flex items-center justify-center text-xl text-indigo-400 border border-indigo-500/20">🛡️</div>
-                        <h3 className="font-bold text-lg text-white">Zero Pop-up Ads</h3>
-                
+                    {/* Features Detailed List */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        {[
+                            { title: "Universal Compatibility", desc: "Supports YouTube, Insta, TikTok, Twitter and 50+ platforms." },
+                            { title: "Privacy First", desc: "No logs, no cookies, and no tracking. Your downloads remain private." },
+                            { title: "No Subscription", desc: "Unlike others, we don't put limits or subscription walls. It's truly free." },
+                            { title: "Fast CDN Nodes", desc: "Downloads distributed across 12 global nodes for maximum speed." }
+                        ].map((f, i) => (
+                            <div key={i} className="p-8 bg-[#0F1224] border border-white/5 rounded-3xl hover:border-blue-500/30 transition-all">
+                                <h3 className="text-xl font-bold text-white mb-2">{f.title}</h3>
+                                <p className="text-gray-400 text-sm">{f.desc}</p>
+                            </div>
+                        ))}
+                    </div>
+                  </div>
+                )}
+              </main>
+            </div>
+          );
+        }
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
