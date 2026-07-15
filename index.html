@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Glicks - Premium Media Downloader</title>
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- React and ReactDOM from CDN -->
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+    <!-- Babel to compile JSX in browser -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body { background-color: #0B0F19; color: white; font-family: sans-serif; }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        // Free icons implementation using standard SVGs to avoid package dependency issues
+        const Sparkles = () => <span className="text-blue-400">✨</span>;
+        const Download = () => <span>📥</span>;
+        const LinkIcon = () => <span>🔗</span>;
+        const RefreshCw = ({className}) => <span className={className}>🔄</span>;
+
+        const SAMPLE_LINKS = [
+          { label: "YouTube Video", url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ" },
+          { label: "Instagram Reel", url: "https://www.instagram.com/p/CgX942kJXy3/" },
+          { label: "Spotify Track", url: "https://open.spotify.com/track/4PTG3Z6ehGkBF36qJkua6C" }
+        ];
+
+        function App() {
+          const [activePage, setActivePage] = useState('home');
+          const [urlInput, setUrlInput] = useState('');
+          const [isProcessing, setIsProcessing] = useState(false);
+          const [processStep, setProcessStep] = useState('');
+          const [mediaDetails, setMediaDetails] = useState(null);
+          const [selectedFormat, setSelectedFormat] = useState('mp4-1080p');
+          const [isDownloading, setIsDownloading] = useState(false);
+          const [downloadProgress, setDownloadProgress] = useState(0);
+          const [isCompleted, setIsCompleted] = useState(false);
+          const [toasts, setToasts] = useState([]);
+
+          const showToast = (message) => {
+            const id = Date.now();
+            setToasts((prev) => [...prev, { id, message }]);
+            setTimeout(() => {
+              setToasts((prev) => prev.filter((t) => t.id !== id));
+            }, 3000);
+          };
+
+          const handleAnalyze = (e) => {
+            if (e) e.preventDefault();
+            if (!urlInput.trim()) {
+              showToast("Please enter a valid link.");
+              return;
+            }
+            setIsProcessing(true);
+            setMediaDetails(null);
+            setIsCompleted(false);
+
+            const steps = [
+              "Connecting to stream servers...",
+              "Bypassing geo-blocks...",
+              "Extracting media file format..."
+            ];
+
+            let step = 0;
+            const interval = setInterval(() => {
+              if (step < steps.length) {
+                setProcessStep(steps[step]);
+                step++;
+              } else {
+                clearInterval(interval);
+                setMediaDetails({
+                  title: "Extracted Premium Media File",
+                  formats: [
+                    { id: 'mp4-1080p', label: 'MP4 Video (1080p Full HD)', size: '45.2 MB' },
+                    { id: 'mp3-320', label: 'MP3 Audio (320kbps High)', size: '8.4 MB' }
+                  ]
+                });
+                setIsProcessing(false);
+                showToast("Success! Formats loaded.");
+              }
+            }, 800);
+          };
+
+          const startDownload = () => {
+            setIsDownloading(true);
+            setDownloadProgress(0);
+
+            const interval = setInterval(() => {
+              setDownloadProgress(prev => {
+                if (prev >= 100) {
+                  clearInterval(interval);
+                  setIsDownloading(false);
+                  setIsCompleted(true);
+                  showToast("Download Completed!");
+                  return 100;
+                }
+                return prev + 20;
+              });
+            }, 400);
+          };
+
+          return (
+            <div className="min-h-screen bg-[#0B0F19] text-white flex flex-col justify-between">
+              {/* Toast */}
+              <div className="fixed bottom-5 right-5 z-50 flex flex-col gap-2 max-w-sm w-full">
+                {toasts.map(t => (
+                  <div key={t.id} className="p-4 rounded-xl bg-slate-900 border border-blue-500/30 text-white flex gap-2 items-center">
+                    <span>✓ {t.message}</span>
+                  </div>
+                ))}
+              </div>
+
+              {/* Header */}
+              <header className="border-b border-white/5 bg-[#0B0F19]/80 backdrop-blur-md sticky top-0 z-40">
+                <div className="max-w-7xl mx-auto px-4 h-20 flex items-center justify-between">
+                  <div onClick={() => setActivePage('home')} className="flex items-center gap-2 cursor-pointer">
+                    <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center"><Sparkles /></div>
+                    <span className="text-xl font-bold tracking-tight">Glicks</span>
+                  </div>
+                  <nav className="flex gap-6 text-sm">
+                    <button onClick={() => setActivePage('home')} className="hover:text-blue-400">Home</button>
+                    <button onClick={() => setActivePage('features')} className="hover:text-blue-400">Features</button>
+                  </nav>
+                </div>
+              </header>
+
+              {/* Content */}
+              <main className="max-w-7xl mx-auto px-4 py-12 flex-1 w-full flex flex-col justify-center">
+                {activePage === 'home' && (
+                  <div className="space-y-16">
+                    <div className="text-center space-y-4 max-w-2xl mx-auto">
+                      <h1 className="text-4xl md:text-6xl font-extrabold">Download <span className="text-blue-400">Videos & Music</span></h1>
+                      <p className="text-slate-400 text-sm">Paste link from YouTube, Instagram, or Spotify below.</p>
+                    </div>
+
+                    <div className="max-w-2xl mx-auto w-full">
+                      <form onSubmit={handleAnalyze} className="p-2 bg-[#111827] border border-white/10 rounded-2xl flex flex-col sm:flex-row gap-2">
+                        <div className="flex items-center gap-2 px-2 flex-1">
+                          <LinkIcon />
+                          <input 
+                            type="url" 
+                            value={urlInput}
+                            onChange={(e) => setUrlInput(e.target.value)}
+                            placeholder="Paste link here..." 
+                            className="bg-transparent border-0 text-white w-full focus:outline-none p-2"
+                          />
+                        </div>
+                        <button type="submit" className="bg-blue-600 hover:bg-blue-500 px-6 py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2">
+                          <Download /> Analyse
+                        </button>
+                      </form>
+                      <div className="flex gap-2 justify-center mt-3 text-xs">
+                        {SAMPLE_LINKS.map((s, i) => (
+                          <button key={i} type="button" onClick={() => setUrlInput(s.url)} className="text-slate-400 hover:text-white px-2 py-1 bg-white/5 rounded-md border border-white/5">{s.label}</button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {isProcessing && (
+                      <div className="max-w-md mx-auto p-6 bg-[#111827] rounded-2xl border border-blue-500/20 text-center space-y-4">
+                        <RefreshCw className="animate-spin inline-block text-xl text-blue-400" />
+                        <p className="text-sm text-blue-400">{processStep}</p>
+                      </div>
+                    )}
+
+                    {mediaDetails && !isProcessing && (
+                      <div className="max-w-xl mx-auto p-6 bg-[#111827] rounded-2xl border border-white/10 space-y-4">
+                        <h3 className="font-bold text-lg">{mediaDetails.title}</h3>
+                        <div className="space-y-2">
+                          {mediaDetails.formats.map(f => (
+                            <button 
+                              key={f.id} 
+                              onClick={() => setSelectedFormat(f.id)}
+                              className={`w-full p-3 rounded-xl border text-left flex justify-between ${selectedFormat === f.id ? 'border-blue-500 bg-blue-500/10' : 'border-white/5 bg-slate-900/50'}`}
+                            >
+                              <span>{f.label}</span>
+                              <span className="font-bold">{f.size}</span>
+                            </button>
+                          ))}
+                        </div>
+                        {!isDownloading && !isCompleted && (
+                          <button onClick={startDownload} className="w-full py-3 bg-blue-600 hover:bg-blue-500 rounded-xl font-bold text-sm flex items-center justify-center gap-2">Get Link</button>
+                        )}
+                        {isDownloading && (
+                          <div className="space-y-2">
+                            <div className="h-1.5 w-full bg-slate-800 rounded-full overflow-hidden">
+                              <div className="h-full bg-blue-500" style={{ width: `${downloadProgress}%` }}></div>
+                            </div>
+                            <p className="text-center text-xs text-slate-400">Progress: {downloadProgress}%</p>
+                          </div>
+                        )}
+                        {isCompleted && (
+                          <div className="text-center text-emerald-400 font-bold text-sm py-2">✓ Download Finished!</div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {activePage === 'features' && (
+                  <div className="max-w-4xl mx-auto space-y-8 text-center py-10">
+                    <h2 className="text-3xl font-extrabold">Features</h2>
+                    <p className="text-slate-400">High speed, zero ads, and clean interfaces for unlimited media conversion.</p>
+                  </div>
+                )}
+              </main>
+
+              {/* Footer */}
+              <footer className="border-t border-white/5 py-6 bg-slate-900/40 text-center text-xs text-slate-500">
+                <span>© 2026 Glicks. Free Branded Extractor Tools.</span>
+              </footer>
+            </div>
+          );
+        }
+
+        // Render to DOM
+        const { useState, useEffect } = React;
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
+
