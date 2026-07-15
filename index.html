@@ -231,7 +231,7 @@
             resultBox.classList.add("hidden-el");
 
             try {
-                // Hitting the direct free media extractor endpoint
+                // Cobalt API try karenge sabse pehle (Super-fast direct files)
                 const res = await fetch("https://api.cobalt.tools/api/json", {
                     method: "POST",
                     headers: {
@@ -250,9 +250,9 @@
                     throw new Error();
                 }
             } catch (err) {
-                // In case API returns 429 rate limit, provide instant redirect downloader tunnel
-                globalDownloadUrl = `https://loader.to/api/button/?url=${encodeURIComponent(url)}&f=mp4`;
-                showToast("Server busy. Loaded optimized tunnel download!");
+                // AGAR COBALT DOWN HAI: Toh direct highly stable public converter page embed URL par bhejenge jo fail nahi hota
+                globalDownloadUrl = `https://pub.converters.guru/api/widget?url=${encodeURIComponent(url)}`;
+                showToast("Direct node bypass loaded!");
             } finally {
                 loader.classList.add("hidden-el");
                 resultBox.classList.remove("hidden-el");
@@ -264,13 +264,15 @@
 
         function triggerDownload() {
             if (globalDownloadUrl) {
+                // Direct open in new tab
                 window.open(globalDownloadUrl, '_blank');
                 const btn = document.getElementById("download-btn");
-                btn.innerHTML = "✓ Download Started!";
-                btn.className = "w-full py-4 bg-emerald-600 text-white rounded-xl font-semibold text-sm transition-all cursor-not-allowed";
-                showToast("Opening high speed stream link...");
+                btn.innerHTML = "✓ Opening Link...";
+                btn.className = "w-full py-4 bg-emerald-600 text-white rounded-xl font-semibold text-sm transition-all";
+                showToast("Connecting to video streams...");
             }
         }
     </script>
 </body>
-</html>
+                            </html>
+                            
